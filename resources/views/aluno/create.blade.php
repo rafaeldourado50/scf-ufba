@@ -31,7 +31,7 @@
                         <div class="row {{ $errors->has('email') ? 'has-error' : ''}}">
                             <label for="email" class="col-md-4 control-label">{{ 'E-mail' }}</label>
                             <div class="col-md-12">
-                                <input class="form-control" name="email" type="text" id="email" value="{{ '' }}" >
+                                <input class="form-control" name="email" type="email" id="email" value="{{ '' }}" >
                                 {!! $errors->first('email', '<p class="help-block">:message</p>') !!}
                             </div>
                         </div>

@@ -10,6 +10,21 @@
 
                     @include('admin.info')
 
+                    <div class="form-group">
+                        <div class="pull-left">
+                            <a href="{{ url('/plano/' . $plano->id . '/aula/create') }}" class="btn btn-success">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Novo
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <a href="{{ url('/plano') }}" class="btn btn-warning">
+                                <i class="fa fa-arrow-left" aria-hidden="true"></i> Voltar
+                            </a>
+                        </div>
+                    </div>
+
+                    <br/><br/>
+
                     <div class="table-responsive">
                         <table class="table table-borderless">
                             <thead>
@@ -46,20 +61,6 @@
                             </tbody>
                         </table>
                     </div>
-
-                    <div class="form-group">
-                        <div class="pull-left">
-                            <a href="{{ url('/plano/' . $plano->id . '/aula/create') }}" class="btn btn-success">
-                                <i class="fa fa-plus" aria-hidden="true"></i> Novo
-                            </a>
-                        </div>
-                        <div class="pull-right">
-                            <a href="{{ url('/plano') }}" class="btn btn-warning">
-                                <i class="fa fa-arrow-left" aria-hidden="true"></i> Voltar
-                            </a>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>

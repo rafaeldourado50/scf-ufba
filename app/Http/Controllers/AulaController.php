@@ -47,9 +47,10 @@ class AulaController extends Controller
      * Store a newly created resource in storage.
      *
      * @param    \Illuminate\Http\Request  $request
+     * @param    int  $plano_id
      * @return  \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $plano_id)
     {
         $this->validate($request, [
             'data' => 'required',
@@ -57,11 +58,14 @@ class AulaController extends Controller
             'descricao' => 'required',
         ]);
 
-        $requestData = $request->all();
+        $aula = new Aula();
+        $aula->plano_id = $plano_id;
+        $aula->data = $request->data;
+        $aula->tema = $request->tema;
+        $aula->descricao = $request->descricao;
+        $aula->save();
 
-        Aula::create($requestData);
-
-        return redirect('aula')->with('success', 'Aula cadastrada com sucesso!');
+        return redirect('plano/' . $plano_id . '/aula')->with('success', 'Aula cadastrada com sucesso!');
     }
 
     /**
@@ -98,10 +102,11 @@ class AulaController extends Controller
      * Update the specified resource in storage.
      *
      * @param    \Illuminate\Http\Request  $request
+     * @param    int  $plano_id
      * @param    int  $id
      * @return  \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $plano_id, $id)
     {
         $this->validate($request, [
             'data' => 'required',
@@ -109,24 +114,27 @@ class AulaController extends Controller
             'descricao' => 'required',
         ]);
 
-        $requestData = $request->all();
-
         $aula = Aula::findOrFail($id);
-        $aula->update($requestData);
+        $aula->plano_id = $plano_id;
+        $aula->data = $request->data;
+        $aula->tema = $request->tema;
+        $aula->descricao = $request->descricao;
+        $aula->save();
 
-        return redirect('aula')->with('success', 'Aula atualizada com sucesso!');
+        return redirect('plano/' . $plano_id . '/aula')->with('success', 'Aula atualizada com sucesso!');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param    int $id
+     * @param    int  $plano_id
+     * @param    int  $id
      * @return  \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($plano_id, $id)
     {
         Aula::destroy($id);
 
-        return redirect('aula')->with('success', 'Aula removida com sucesso!');
+        return redirect('plano/' . $plano_id . '/aula')->with('success', 'Aula removida com sucesso!');
     }
 }

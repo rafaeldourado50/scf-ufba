@@ -15,7 +15,7 @@
                         <div class="row {{ $errors->has('data') ? 'has-error' : ''}}">
                             <label for="data" class="col-md-4 control-label">{{ 'Data' }}</label>
                             <div class="col-md-12">
-                                <input class="form-control" name="data" type="text" id="data" value="{{ $aula->data }}" >
+                                <input class="form-control" name="data" type="date" id="data" value="{{ $aula->data }}" >
                                 {!! $errors->first('data', '<p class="help-block">:message</p>') !!}
                             </div>
                         </div>
