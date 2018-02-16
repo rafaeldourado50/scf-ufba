@@ -38,6 +38,7 @@
                             <button type="submit" class="btn btn-danger" onclick="return confirm(&quot;Confirma exclusão?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Excluir</button>
                         </form>
                     </div>
+
                     <div class="pull-right">
                         <a href="{{ url('/plano') }}" class="btn btn-warning">
                             <i class="fa fa-arrow-left" aria-hidden="true"></i> Voltar

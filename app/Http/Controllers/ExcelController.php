@@ -49,10 +49,10 @@ class ExcelController extends Controller
         $plano->save();
 
         // criando as aulas
-        $this->cadastrarListaAulas($turma, $plano);
+        $this->storeClassesList($turma, $plano);
 
         // criando os alunos
-        $this->cadastrarListaAlunos($result, $plano);
+        $this->storeStudentsList($result, $plano);
 
         return redirect("plano")->with('success', 'Plano importado com sucesso!');;
     }
@@ -61,7 +61,7 @@ class ExcelController extends Controller
      * @param $result
      * @param $plano
      */
-    public function cadastrarListaAlunos($result, $plano): void
+    public function storeStudentsList($result, $plano)
     {
         foreach ($result as $row) {
             $aluno = new Aluno();
@@ -78,7 +78,7 @@ class ExcelController extends Controller
      * @param $turma
      * @param $plano
      */
-    public function cadastrarListaAulas($turma, $plano): void
+    public function storeClassesList($turma, $plano)
     {
         $horarios = Horario::where('turma_id', '=', $turma->id)->orderBy('dia')->get();
 
@@ -98,7 +98,8 @@ class ExcelController extends Controller
 
                 $aula = new Aula();
                 $aula->plano_id = $plano->id;
-                $aula->data = $data_atual;
+                $aula->data = Carbon::createFromFormat('Y-m-d H:i', $data_atual->year . '-' . $data_atual->month . '-' . $data_atual->day . ' ' .
+                    $horario->hora_inicio . ':' . $horario->minuto_inicio);
                 $aula->save();
             }
 

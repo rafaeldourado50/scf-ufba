@@ -20,19 +20,17 @@
                             </div>
                         </div>
 
-                        <div class="row {{ $errors->has('disciplina') ? 'has-error' : ''}}">
+                        <div class="row">
                             <label for="disciplina" class="col-md-4 control-label">{{ 'Disciplina' }}</label>
                             <div class="col-md-12">
-                                <input class="form-control" name="disciplina" type="text" id="disciplina" value="{{ $plano->codigo_disciplina }}" >
-                                {!! $errors->first('disciplina', '<p class="help-block">:message</p>') !!}
+                                <input class="form-control" name="disciplina" type="text" id="disciplina" value="{{ $plano->codigo_disciplina }}" disabled>
                             </div>
                         </div>
 
-                        <div class="row {{ $errors->has('turma') ? 'has-error' : ''}}">
+                        <div class="row">
                             <label for="turma" class="col-md-4 control-label">{{ 'Turma' }}</label>
                             <div class="col-md-12">
-                                <input class="form-control" name="turma" type="text" id="turma" value="{{ $plano->codigo_turma }}" >
-                                {!! $errors->first('turma', '<p class="help-block">:message</p>') !!}
+                                <input class="form-control" name="turma" type="text" id="turma" value="{{ $plano->codigo_turma }}" disabled>
                             </div>
                         </div>
 

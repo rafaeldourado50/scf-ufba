@@ -21,14 +21,14 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 //plano Routes
 Route::group(['middleware'=> 'web'], function() {
-    Route::resource('plano','\App\Http\Controllers\PlanoController');
+    Route::resource('plano', '\App\Http\Controllers\PlanoController');
 });
 
 Route::get('import',  ['as'=>'import', 'uses'=>'ExcelController@import']);
 Route::post('import', ['as'=>'import', 'uses'=>'ExcelController@store']);
 
 //aluno Routes
-Route::group(['middleware'=> 'web'],function() {
+Route::group(['middleware'=> 'web'], function() {
     Route::get('plano/{plano}/aluno', ['as' => 'aluno.index', 'uses' => 'AlunoController@index']);
     Route::get('plano/{plano}/aluno/create', ['as' => 'aluno.create', 'uses' => 'AlunoController@create']);
     Route::post('plano/{plano}/aluno', ['as' => 'aluno.store', 'uses' => 'AlunoController@store']);
@@ -39,14 +39,17 @@ Route::group(['middleware'=> 'web'],function() {
 });
 
 //aula Routes
-Route::group(['middleware'=> 'web'],function() {
+Route::group(['middleware'=> 'web'], function() {
     Route::get('plano/{plano}/aula', ['as' => 'aula.index', 'uses' => 'AulaController@index']);
     Route::get('plano/{plano}/aula/create', ['as' => 'aula.create', 'uses' => 'AulaController@create']);
     Route::post('plano/{plano}/aula', ['as' => 'aula.store', 'uses' => 'AulaController@store']);
+    Route::get('plano/{plano}/aula/{aula}', ['as' => 'aula.show', 'uses' => 'AulaController@show']);
+    Route::get('plano/{plano}/aula/{aula}/edit', ['as' => 'aula.edit', 'uses' => 'AulaController@edit']);
+    Route::patch('plano/{plano}/aula/{aula}', ['as' => 'aula.update', 'uses' => 'AulaController@update']);
     Route::delete('plano/{plano}/aula/{aula}', ['as' => 'aula.destroy', 'uses' => 'AulaController@destroy']);
 });
 
 //chamada Routes
 Route::group(['middleware'=> 'web'],function() {
-    Route::resource('chamada','\App\Http\Controllers\ChamadaController');
+    Route::resource('chamada', '\App\Http\Controllers\ChamadaController');
 });

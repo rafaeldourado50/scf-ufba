@@ -1,38 +1,57 @@
 @extends('layouts.app')
 
 @section('content')
-<div class = 'container'>
-    <h1>
-        Edit aula
-    </h1>
-    <form method = 'get' action = '{!!url("aula")!!}'>
-        <button class = 'btn blue'>aula Index</button>
-    </form>
-    <br>
-    <form method = 'POST' action = '{!! url("aula")!!}/{!!$aula->
-        id!!}/update'> 
-        <input type = 'hidden' name = '_token' value = '{{Session::token()}}'>
-        <div class="input-field col s6">
-            <input id="plano_id" name = "plano_id" type="text" class="validate" value="{!!$aula->
-            plano_id!!}"> 
-            <label for="plano_id">plano_id</label>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Editar Aula</div>
+
+                <div class="panel-body">
+
+                    <form method="POST" action="{{ url('/plano/' . $plano->id . '/aula/' . $aula->id) }}" accept-charset="UTF-8" enctype="multipart/form-data">
+                        {{ method_field('PATCH') }}
+                        {{ csrf_field() }}
+
+                        <div class="row {{ $errors->has('data') ? 'has-error' : ''}}">
+                            <label for="data" class="col-md-4 control-label">{{ 'Data' }}</label>
+                            <div class="col-md-12">
+                                <input class="form-control" name="data" type="text" id="data" value="{{ $aula->data }}" >
+                                {!! $errors->first('data', '<p class="help-block">:message</p>') !!}
+                            </div>
+                        </div>
+
+                        <div class="row {{ $errors->has('tema') ? 'has-error' : ''}}">
+                            <label for="tema" class="col-md-4 control-label">{{ 'Tema' }}</label>
+                            <div class="col-md-12">
+                                <input class="form-control" name="tema" type="text" id="tema" value="{{ $aula->tema }}" >
+                                {!! $errors->first('tema', '<p class="help-block">:message</p>') !!}
+                            </div>
+                        </div>
+
+                        <div class="row {{ $errors->has('descricao') ? 'has-error' : ''}}">
+                            <label for="descricao" class="col-md-4 control-label">{{ 'Descrição' }}</label>
+                            <div class="col-md-12">
+                                <input class="form-control" name="descricao" type="text" id="descricao" value="{{ $aula->descricao }}" >
+                                {!! $errors->first('descricao', '<p class="help-block">:message</p>') !!}
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 6px;">
+                            <div class="pull-left">
+                                <button class="btn btn-success" type="submit">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Gravar
+                                </button>
+                            </div>
+                            <div class="pull-right">
+                                <a href="{{ url('/plano/' . $plano->id . '/aula') }}" class="btn btn-danger">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
         </div>
-        <div class="input-field col s6">
-            <input id="data" name = "data" type="text" class="validate" value="{!!$aula->
-            data!!}"> 
-            <label for="data">data</label>
-        </div>
-        <div class="input-field col s6">
-            <input id="tema" name = "tema" type="text" class="validate" value="{!!$aula->
-            tema!!}"> 
-            <label for="tema">tema</label>
-        </div>
-        <div class="input-field col s6">
-            <input id="descricao" name = "descricao" type="text" class="validate" value="{!!$aula->
-            descricao!!}"> 
-            <label for="descricao">descricao</label>
-        </div>
-        <button class = 'btn red' type ='submit'>Update</button>
-    </form>
-</div>
+    </div>
 @endsection

@@ -2,31 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\App;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Aula;
-use Amranidev\Ajaxis\Ajaxis;
-use URL;
+use App\Plano;
 
-/**
- * Class AulaController.
- *
- * @author  The scaffold-interface created at 2018-02-07 06:08:11pm
- * @link  https://github.com/amranidev/scaffold-interface
- */
+use Illuminate\Http\Request;
+
 class AulaController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return  \Illuminate\Http\Response
      */
-    public function index()
+    public function index($plano_id)
     {
-        $title = 'Index - aula';
-        $aulas = Aula::paginate(6);
-        return view('aula.index',compact('aulas','title'));
+        $plano = Plano::findOrFail($plano_id);
+
+        return view('aula.index', compact('plano'));
     }
 
     /**
@@ -34,11 +36,11 @@ class AulaController extends Controller
      *
      * @return  \Illuminate\Http\Response
      */
-    public function create()
+    public function create($plano_id)
     {
-        $title = 'Create - aula';
-        
-        return view('aula.create');
+        $plano = Plano::findOrFail($plano_id);
+
+        return view('aula.create', compact('plano'));
     }
 
     /**
@@ -49,87 +51,48 @@ class AulaController extends Controller
      */
     public function store(Request $request)
     {
-        $n = $request->carga_horaria;
-        if(isset($n)){
-            for($i = $n; $i > 0; $i--){
-                $aula = new Aula();
-                $aula->plano_id = $request->plano_id;
-                $aula->data = " ";
-                $aula->tema = " ";
-                $aula->descricao = "";
+        $this->validate($request, [
+            'data' => 'required',
+            'tema' => 'required',
+            'descricao' => 'required',
+        ]);
 
-                $aula->save();
-            }
-        }
-        else{
-            $aula = new Aula();
-            $aula->plano_id = $request->plano_id;
-            $aula->data = $request->data;
-            $aula->tema = $request->tema;
-            $aula->descricao = $request->descricao;
-            $aula->save();
-        }
+        $requestData = $request->all();
 
-        $pusher = App::make('pusher');
+        Aula::create($requestData);
 
-        //default pusher notification.
-        //by default channel=test-channel,event=test-event
-        //Here is a pusher notification example when you create a new resource in storage.
-        //you can modify anything you want or use it wherever.
-        $pusher->trigger('test-channel',
-                         'test-event',
-                        ['message' => 'A new aula has been created !!']);
-
-        return redirect('aula');
+        return redirect('aula')->with('success', 'Aula cadastrada com sucesso!');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param    \Illuminate\Http\Request  $request
+     * @param    int  $plano_id
      * @param    int  $id
      * @return  \Illuminate\Http\Response
      */
-    public function show($id,Request $request)
+    public function show($plano_id, $id)
     {
-        $title = 'Show - aula';
-
-        if($request->ajax())
-        {
-            return URL::to('aula/'.$id);
-        }
-
         $aula = Aula::findOrfail($id);
-        return view('aula.show',compact('title','aula'));
+        $plano = Plano::findOrfail($plano_id);
+
+        return view('aula.show', compact('aula', 'plano'));
     }
 
     /**
      * Show the form for editing the specified resource.
-     * @param    \Illuminate\Http\Request  $request
+     *
+     * @param    int  $plano_id
      * @param    int  $id
      * @return  \Illuminate\Http\Response
      */
-    public function edit($id,Request $request)
+    public function edit($plano_id, $id)
     {
-        $title = 'Edit - aula';
-        if($request->ajax())
-        {
-            return URL::to('aula/'. $id . '/edit');
-        }
-
-        
         $aula = Aula::findOrfail($id);
-        return view('aula.edit',compact('title','aula'  ));
-    }
+        $plano = Plano::findOrfail($plano_id);
 
-    public function consulta($id)
-    {
-        $plano_id = $id;
-        $title = 'Lista de Aulas';
-        $aulas = Aula::paginate(6);
-        return view('aula.index',compact('aulas','title','plano_id'));
+        return view('aula.edit', compact('aula', 'plano'));
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -138,39 +101,20 @@ class AulaController extends Controller
      * @param    int  $id
      * @return  \Illuminate\Http\Response
      */
-    public function update($id,Request $request)
+    public function update(Request $request, $id)
     {
-        $aula = Aula::findOrfail($id);
-    	
-        $aula->plano_id = $request->plano_id;
-        
-        $aula->data = $request->data;
-        
-        $aula->tema = $request->tema;
-        
-        $aula->descricao = $request->descricao;
-        
-        
-        $aula->save();
+        $this->validate($request, [
+            'data' => 'required',
+            'tema' => 'required',
+            'descricao' => 'required',
+        ]);
 
-        return redirect('aula');
-    }
+        $requestData = $request->all();
 
-    /**
-     * Delete confirmation message by Ajaxis.
-     *
-     * @link      https://github.com/amranidev/ajaxis
-     * @param    \Illuminate\Http\Request  $request
-     * @return  String
-     */
-    public function DeleteMsg($id,Request $request)
-    {
-        $msg = Ajaxis::MtDeleting('Warning!!','Would you like to remove This?','/aula/'. $id . '/delete');
+        $aula = Aula::findOrFail($id);
+        $aula->update($requestData);
 
-        if($request->ajax())
-        {
-            return $msg;
-        }
+        return redirect('aula')->with('success', 'Aula atualizada com sucesso!');
     }
 
     /**
@@ -181,8 +125,8 @@ class AulaController extends Controller
      */
     public function destroy($id)
     {
-     	$aula = Aula::findOrfail($id);
-     	$aula->delete();
-        return redirect('aula');
+        Aula::destroy($id);
+
+        return redirect('aula')->with('success', 'Aula removida com sucesso!');
     }
 }

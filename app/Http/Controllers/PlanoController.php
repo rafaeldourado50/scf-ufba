@@ -4,17 +4,15 @@ namespace App\Http\Controllers;
 
 use Auth;
 
+use App\Disciplina;
 use App\Plano;
+use App\Turma;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-/**
- * Class PlanoController.
- */
 class PlanoController extends Controller
 {
     /**
@@ -65,9 +63,28 @@ class PlanoController extends Controller
      */
     public function store(Request $request)
     {
-        $requestData = $request->all();
+        $this->validate($request, [
+            'semestre' => 'required',
+            'disciplina' => 'required',
+            'turma' => 'required',
+        ]);
 
-        Plano::create($requestData);
+        $semestre = $request->semestre;
+        $codigo_disciplina = $request->disciplina;
+        $codigo_turma = $request->turma;
+
+        $disciplina = Disciplina::where('codigo', '=', $codigo_disciplina)->first();
+
+        $turma = Turma::where([
+            ['codigo', '=', $codigo_turma],
+            ['disciplina_id', '=', $disciplina->id],
+        ])->first();
+
+        $plano = new Plano();
+        $plano->user_id = Auth::user()->id;
+        $plano->semestre = $semestre;
+        $plano->turma_id = $turma->id;
+        $plano->save();
 
         return redirect('plano')->with('success', 'Plano cadastrado com sucesso!');
     }
@@ -119,10 +136,15 @@ class PlanoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $requestData = $request->all();
+        $this->validate($request, [
+            'semestre' => 'required',
+        ]);
+
+        $semestre = $request->semestre;
 
         $plano = Plano::findOrFail($id);
-        $plano->update($requestData);
+        $plano->semestre = $semestre;
+        $plano->save();
 
         return redirect('plano')->with('success', 'Plano atualizado com sucesso!');
     }

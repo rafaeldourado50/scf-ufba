@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\App;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Aluno;
 use App\Plano;
-use Amranidev\Ajaxis\Ajaxis;
-use URL;
+
+use Illuminate\Http\Request;
 
 class AlunoController extends Controller
 {
@@ -54,6 +51,12 @@ class AlunoController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'matricula' => 'required',
+            'nome' => 'required',
+            'email' => 'required',
+        ]);
+
         $requestData = $request->all();
 
         Aluno::create($requestData);
@@ -100,6 +103,12 @@ class AlunoController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'matricula' => 'required',
+            'nome' => 'required',
+            'email' => 'required',
+        ]);
+
         $requestData = $request->all();
 
         $aluno = Aluno::findOrFail($id);
