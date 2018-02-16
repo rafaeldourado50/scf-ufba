@@ -69,7 +69,6 @@ class PlanoController extends Controller
             'turma' => 'required',
         ]);
 
-        $semestre = $request->semestre;
         $codigo_disciplina = $request->disciplina;
         $codigo_turma = $request->turma;
 
@@ -82,7 +81,7 @@ class PlanoController extends Controller
 
         $plano = new Plano();
         $plano->user_id = Auth::user()->id;
-        $plano->semestre = $semestre;
+        $plano->semestre = $request->semestre;
         $plano->turma_id = $turma->id;
         $plano->save();
 
@@ -140,10 +139,8 @@ class PlanoController extends Controller
             'semestre' => 'required',
         ]);
 
-        $semestre = $request->semestre;
-
         $plano = Plano::findOrFail($id);
-        $plano->semestre = $semestre;
+        $plano->semestre = $request->semestre;
         $plano->save();
 
         return redirect('plano')->with('success', 'Plano atualizado com sucesso!');

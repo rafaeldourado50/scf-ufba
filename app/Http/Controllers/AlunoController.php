@@ -47,9 +47,10 @@ class AlunoController extends Controller
      * Store a newly created resource in storage.
      *
      * @param    \Illuminate\Http\Request  $request
+     * @param    int  $plano_id
      * @return  \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $plano_id)
     {
         $this->validate($request, [
             'matricula' => 'required',
@@ -57,11 +58,15 @@ class AlunoController extends Controller
             'email' => 'required',
         ]);
 
-        $requestData = $request->all();
+        $aluno = new Aluno();
+        $aluno->plano_id = $plano_id;
+        $aluno->matricula = $request->matricula;
+        $aluno->nome = $request->nome;
+        $aluno->email = $request->email;
+        $aluno->faltas = 0;
+        $aluno->save();
 
-        Aluno::create($requestData);
-
-        return redirect('aluno')->with('success', 'Aluno cadastrado com sucesso!');
+        return redirect('plano/' . $plano_id . '/aluno')->with('success', 'Aluno cadastrado com sucesso!');
     }
 
     /**
@@ -98,10 +103,11 @@ class AlunoController extends Controller
      * Update the specified resource in storage.
      *
      * @param    \Illuminate\Http\Request  $request
+     * @param    int  $plano_id
      * @param    int  $id
      * @return  \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $plano_id, $id)
     {
         $this->validate($request, [
             'matricula' => 'required',
@@ -109,25 +115,28 @@ class AlunoController extends Controller
             'email' => 'required',
         ]);
 
-        $requestData = $request->all();
-
         $aluno = Aluno::findOrFail($id);
-        $aluno->update($requestData);
+        $aluno->plano_id = $plano_id;
+        $aluno->matricula = $request->matricula;
+        $aluno->nome = $request->nome;
+        $aluno->email = $request->email;
+        $aluno->save();
 
-        return redirect('aluno')->with('success', 'Aluno atualizado com sucesso!');
+        return redirect('plano/' . $plano_id . '/aluno')->with('success', 'Aluno atualizado com sucesso!');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param    int $id
+     * @param    int  $plano_id
+     * @param    int  $id
      * @return  \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($plano_id, $id)
     {
         Aluno::destroy($id);
 
-        return redirect('aluno')->with('success', 'Aluno removido com sucesso!');
+        return redirect('plano/' . $plano_id . '/aluno')->with('success', 'Aluno removido com sucesso!');
     }
 
     public function consulta($id)
