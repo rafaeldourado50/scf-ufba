@@ -10,24 +10,28 @@ use App\Plano;
 use Amranidev\Ajaxis\Ajaxis;
 use URL;
 
-/**
- * Class AlunoController.
- *
- * @author  The scaffold-interface created at 2018-02-07 06:06:13pm
- * @link  https://github.com/amranidev/scaffold-interface
- */
 class AlunoController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return  \Illuminate\Http\Response
      */
-    public function index()
+    public function index($plano_id)
     {
-        $title = 'Index - aluno';
-        $alunos = Aluno::paginate(6);
-        return view('aluno.index',compact('alunos','title'));
+        $plano = Plano::findOrFail($plano_id);
+
+        return view('aluno.index', compact('plano'));
     }
 
     /**
@@ -35,11 +39,11 @@ class AlunoController extends Controller
      *
      * @return  \Illuminate\Http\Response
      */
-    public function create()
+    public function create($plano_id)
     {
-        $title = 'Create - aluno';
-        
-        return view('aluno.create', compact($plano_id));
+        $plano = Plano::findOrFail($plano_id);
+
+        return view('aluno.create', compact('plano'));
     }
 
     /**
@@ -50,75 +54,71 @@ class AlunoController extends Controller
      */
     public function store(Request $request)
     {
-        $aluno = new Aluno();
+        $requestData = $request->all();
 
-        
-        $aluno->plano_id = $request->plano_id;
+        Aluno::create($requestData);
 
-        
-        $aluno->nome = $request->nome;
-
-        
-        $aluno->email = $request->email;
-
-        
-        $aluno->faltas = $request->faltas;
-
-        
-        
-        $aluno->save();
-
-        $pusher = App::make('pusher');
-
-        //default pusher notification.
-        //by default channel=test-channel,event=test-event
-        //Here is a pusher notification example when you create a new resource in storage.
-        //you can modify anything you want or use it wherever.
-        $pusher->trigger('test-channel',
-                         'test-event',
-                        ['message' => 'A new aluno has been created !!']);
-        $id = $request->plano_id;
-
-        return view('aluno.create', compact('id'));
+        return redirect('aluno')->with('success', 'Aluno cadastrado com sucesso!');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param    \Illuminate\Http\Request  $request
+     * @param    int  $plano_id
      * @param    int  $id
      * @return  \Illuminate\Http\Response
      */
-    public function show($id,Request $request)
+    public function show($plano_id, $id)
     {
-        $title = 'Show - aluno';
-
-        if($request->ajax())
-        {
-            return URL::to('aluno/'.$id);
-        }
-
         $aluno = Aluno::findOrfail($id);
-        return view('aluno.show',compact('title','aluno'));
+        $plano = Plano::findOrfail($plano_id);
+
+        return view('aluno.show', compact('aluno', 'plano'));
     }
 
     /**
      * Show the form for editing the specified resource.
+     *
+     * @param    int  $plano_id
+     * @param    int  $id
+     * @return  \Illuminate\Http\Response
+     */
+    public function edit($plano_id, $id)
+    {
+        $aluno = Aluno::findOrfail($id);
+        $plano = Plano::findOrfail($plano_id);
+
+        return view('aluno.edit', compact('aluno', 'plano'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
      * @param    \Illuminate\Http\Request  $request
      * @param    int  $id
      * @return  \Illuminate\Http\Response
      */
-    public function edit($id,Request $request)
+    public function update(Request $request, $id)
     {
-        $title = 'Edit - aluno';
-        if($request->ajax())
-        {
-            return URL::to('aluno/'. $id . '/edit');
-        }
+        $requestData = $request->all();
 
-        
-        $aluno = Aluno::findOrfail($id);
-        return view('aluno.edit',compact('title','aluno'  ));
+        $aluno = Aluno::findOrFail($id);
+        $aluno->update($requestData);
+
+        return redirect('aluno')->with('success', 'Aluno atualizado com sucesso!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param    int $id
+     * @return  \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        Aluno::destroy($id);
+
+        return redirect('aluno')->with('success', 'Aluno removido com sucesso!');
     }
 
     public function consulta($id)
@@ -136,7 +136,7 @@ class AlunoController extends Controller
         if($aluno->faltas < $plano->carga_horaria){
             $aluno->faltas = $aluno->faltas + 1;
             $aluno->save();
-        }        
+        }
         $plano_id = $plano->id;
         $title = 'Lista de Alunos';
         $alunos = Aluno::paginate(6);
@@ -150,7 +150,7 @@ class AlunoController extends Controller
         if($aluno->faltas > 0){
             $aluno->faltas = $aluno->faltas - 1;
             $aluno->save();
-        }        
+        }
         $plano_id = $aluno->plano_id;
         $title = 'Lista de Alunos';
         $alunos = Aluno::paginate(6);
@@ -164,61 +164,5 @@ class AlunoController extends Controller
         $title = 'Lista de Alunos';
         $alunos = Aluno::paginate(6);
         return view('aluno.chamada',compact('alunos','title','plano_id'));
-    }
-
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param    \Illuminate\Http\Request  $request
-     * @param    int  $id
-     * @return  \Illuminate\Http\Response
-     */
-    public function update($id,Request $request)
-    {
-        $aluno = Aluno::findOrfail($id);
-    	
-        $aluno->plano_id = $request->plano_id;
-        
-        $aluno->nome = $request->nome;
-        
-        $aluno->email = $request->email;
-        
-        $aluno->faltas = $request->faltas;
-        
-        
-        $aluno->save();
-
-        return redirect('aluno');
-    }
-
-    /**
-     * Delete confirmation message by Ajaxis.
-     *
-     * @link      https://github.com/amranidev/ajaxis
-     * @param    \Illuminate\Http\Request  $request
-     * @return  String
-     */
-    public function DeleteMsg($id,Request $request)
-    {
-        $msg = Ajaxis::MtDeleting('Warning!!','Would you like to remove This?','/aluno/'. $id . '/delete');
-
-        if($request->ajax())
-        {
-            return $msg;
-        }
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param    int $id
-     * @return  \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-     	$aluno = Aluno::findOrfail($id);
-     	$aluno->delete();
-        return redirect('aluno');
     }
 }

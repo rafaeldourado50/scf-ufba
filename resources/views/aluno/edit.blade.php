@@ -1,39 +1,57 @@
-@extends('scaffold-interface.layouts.defaultMaterialize')
-@section('title','Edit')
-@section('content')
+@extends('layouts.app')
 
-<div class = 'container'>
-    <h1>
-        Editar Aluno
-    </h1>
-    <form method = 'get' action = '{!!url("aluno")!!}'>
-        <button class = 'btn blue'>Listar Aluno</button>
-    </form>
-    <br>
-    <form method = 'POST' action = '{!! url("aluno")!!}/{!!$aluno->
-        id!!}/update'> 
-        <input type = 'hidden' name = '_token' value = '{{Session::token()}}'>
-        <div class="input-field col s6">
-            <input id="plano_id" name = "plano_id" type="text" class="validate" value="{!!$aluno->
-            plano_id!!}"> 
-            <label for="plano_id">Id Plano</label>
+@section('content')
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Editar Aluno</div>
+
+                <div class="panel-body">
+
+                    <form method="POST" action="{{ url('/plano/' . $plano->id . '/aluno/' . $aluno->id) }}" accept-charset="UTF-8" enctype="multipart/form-data">
+                        {{ method_field('PATCH') }}
+                        {{ csrf_field() }}
+
+                        <div class="row {{ $errors->has('matricula') ? 'has-error' : ''}}">
+                            <label for="matricula" class="col-md-4 control-label">{{ 'Matrícula' }}</label>
+                            <div class="col-md-12">
+                                <input class="form-control" name="matricula" type="text" id="matricula" value="{{ $aluno->matricula }}" >
+                                {!! $errors->first('matricula', '<p class="help-block">:message</p>') !!}
+                            </div>
+                        </div>
+
+                        <div class="row {{ $errors->has('nome') ? 'has-error' : ''}}">
+                            <label for="nome" class="col-md-4 control-label">{{ 'Nome' }}</label>
+                            <div class="col-md-12">
+                                <input class="form-control" name="nome" type="text" id="nome" value="{{ $aluno->nome }}" >
+                                {!! $errors->first('nome', '<p class="help-block">:message</p>') !!}
+                            </div>
+                        </div>
+
+                        <div class="row {{ $errors->has('email') ? 'has-error' : ''}}">
+                            <label for="email" class="col-md-4 control-label">{{ 'E-mail' }}</label>
+                            <div class="col-md-12">
+                                <input class="form-control" name="email" type="text" id="email" value="{{ $aluno->email }}" >
+                                {!! $errors->first('email', '<p class="help-block">:message</p>') !!}
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 6px;">
+                            <div class="pull-left">
+                                <button class="btn btn-success" type="submit">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Gravar
+                                </button>
+                            </div>
+                            <div class="pull-right">
+                                <a href="{{ url('/plano/' . $plano->id . '/aluno') }}" class="btn btn-danger">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
         </div>
-        <div class="input-field col s6">
-            <input id="nome" name = "nome" type="text" class="validate" value="{!!$aluno->
-            nome!!}"> 
-            <label for="nome">Nome</label>
-        </div>
-        <div class="input-field col s6">
-            <input id="email" name = "email" type="text" class="validate" value="{!!$aluno->
-            email!!}"> 
-            <label for="email">Email</label>
-        </div>
-        <div class="input-field col s6">
-            <input id="faltas" name = "faltas" type="text" class="validate" value="{!!$aluno->
-            faltas!!}"> 
-            <label for="faltas">Faltas</label>
-        </div>
-        <button class = 'btn red' type ='submit'>Atualizar</button>
-    </form>
-</div>
+    </div>
 @endsection

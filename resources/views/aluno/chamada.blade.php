@@ -1,7 +1,6 @@
-@extends('scaffold-interface.layouts.defaultMaterialize')
-@section('title','Index')
-@section('content')
+@extends('layouts.app')
 
+@section('content')
 <div class = 'container'>
     <h1>
         Alunos

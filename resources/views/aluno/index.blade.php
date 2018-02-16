@@ -1,45 +1,69 @@
-@extends('scaffold-interface.layouts.defaultMaterialize')
-@section('title','Index')
+@extends('layouts.app')
+
 @section('content')
-
-<div class = 'container'>
-    <h1>
-        Alunos
-    </h1>
     <div class="row">
-        <form class = 'col s3' method = 'get' action = '{!!url("aluno")!!}/create'>
-            <button class = 'btn red' type = 'submit'>Criar Novo Aluno</button>
-        </form>
-    </div>
-    <table>
-        <thead>
-            <th>Id Plano</th>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Faltas</th>
-            <th>Ações</th>
-        </thead>
-        <tbody>
-            @foreach($alunos as $aluno) 
-            @if($aluno->plano_id == $plano_id)
-            <tr>
-                <td>{!!$aluno->plano_id!!}</td>
-                <td>{!!$aluno->nome!!}</td>
-                <td>{!!$aluno->email!!}</td>
-                <td>{!!$aluno->faltas!!}</td>
-                <td>
-                    <div class = 'row'>
-                        <a href = "/aluno/{!!$aluno->id!!}/delete" class = 'delete btn-floating modal-trigger red'><i class = 'material-icons'>delete</i></a>
-                        <a href = '#' class = 'viewEdit btn-floating blue' data-link = '/aluno/{!!$aluno->id!!}/edit'><i class = 'material-icons'>edit</i></a>
-                        <a href = '#' class = 'viewShow btn-floating orange' data-link = '/aluno/{!!$aluno->id!!}'><i class = 'material-icons'>info</i></a>
-                    </div>
-                </td>
-            </tr>
-            @endif
-            @endforeach 
-        </tbody>
-    </table>
-    {!! $alunos->render() !!}
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Lista de Alunos</div>
 
-</div>
+                <div class="panel-body">
+
+                    @include('admin.info')
+
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Matricula</th>
+                                <th>Email</th>
+                                <th>Faltas</th>
+                                <th style="width: 150px !important;">Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($plano->alunos as $aluno)
+                                <tr>
+                                    <td>{{ $aluno->nome }}</td>
+                                    <td>{{ $aluno->matricula }}</td>
+                                    <td>{{ $aluno->email }}</td>
+                                    <td>{{ $aluno->faltas }}</td>
+                                    <td>
+                                        <a href="{{ url('/plano/' . $plano->id . '/aluno/' . $aluno->id) }}" title="Visualizar">
+                                            <button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                                        </a>
+
+                                        <a href="{{ url('/plano/' . $plano->id . '/aluno/' . $aluno->id . '/edit') }}" title="Editar">
+                                            <button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                        </a>
+
+                                        <form method="POST" action="{{ url('/plano/' . $plano->id . '/aluno/' . $aluno->id) }}" accept-charset="UTF-8" style="display:inline">
+                                            {{ method_field('DELETE') }}
+                                            {{ csrf_field() }}
+                                            <button type="submit" class="btn btn-danger btn-sm" title="Excluir" onclick="return confirm(&quot;Confirma exclusão?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="pull-left">
+                            <a href="{{ url('/plano/' . $plano->id . '/aluno/create') }}" class="btn btn-success">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Novo
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <a href="{{ url('/plano') }}" class="btn btn-warning">
+                                <i class="fa fa-arrow-left" aria-hidden="true"></i> Voltar
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

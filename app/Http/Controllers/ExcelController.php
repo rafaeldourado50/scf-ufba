@@ -12,12 +12,8 @@ use App\Horario;
 use App\Plano;
 use App\Turma;
 
-use App\Http\Controllers\Controller;
-
 use Carbon\Carbon;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 
 class ExcelController extends Controller
@@ -52,6 +48,38 @@ class ExcelController extends Controller
         $plano->turma_id = $turma->id;
         $plano->save();
 
+        // criando as aulas
+        $this->cadastrarListaAulas($turma, $plano);
+
+        // criando os alunos
+        $this->cadastrarListaAlunos($result, $plano);
+
+        return redirect("plano")->with('success', 'Plano importado com sucesso!');;
+    }
+
+    /**
+     * @param $result
+     * @param $plano
+     */
+    public function cadastrarListaAlunos($result, $plano): void
+    {
+        foreach ($result as $row) {
+            $aluno = new Aluno();
+            $aluno->plano_id = $plano->id;
+            $aluno->matricula = $row->matricula;
+            $aluno->nome = $row->nome;
+            $aluno->email = $row->email;
+            $aluno->faltas = 0;
+            $aluno->save();
+        }
+    }
+
+    /**
+     * @param $turma
+     * @param $plano
+     */
+    public function cadastrarListaAulas($turma, $plano): void
+    {
         $horarios = Horario::where('turma_id', '=', $turma->id)->orderBy('dia')->get();
 
         $data_ini = Carbon::createFromDate(2017, 10, 02);
@@ -67,7 +95,7 @@ class ExcelController extends Controller
                 if ($diff > 0) {
                     $data_atual->addDays($diff);
                 }
-                // criando as aulas
+
                 $aula = new Aula();
                 $aula->plano_id = $plano->id;
                 $aula->data = $data_atual;
@@ -76,18 +104,5 @@ class ExcelController extends Controller
 
             $data_ini->addWeek();
         }
-
-        // criando os alunos
-        foreach ($result as $row) {
-            $aluno = new Aluno();
-            $aluno->plano_id = $plano->id;
-            $aluno->matricula = $row->matricula;
-            $aluno->nome = $row->nome;
-            $aluno->email = $row->email;
-            $aluno->faltas = 0;
-            $aluno->save();
-        }
-
-        return redirect("plano")->with('success', 'Plano importado com sucesso!');;
     }
 }

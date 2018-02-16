@@ -35,13 +35,13 @@ class PlanoController extends Controller
     public function index()
     {
         $user = Auth::user();
-        if (!empty($user))
-        {
+        if (!empty($user)) {
             $planos = DB::table('planos')
                 ->join('turmas', 'turmas.id', '=', 'planos.turma_id')
                 ->join('disciplinas', 'disciplinas.id', '=', 'turmas.disciplina_id')
-                ->where('user_id', '=', $user->id)
-                ->select('planos.id', 'disciplinas.nome', 'turmas.codigo', 'planos.semestre', 'disciplinas.carga_horaria')
+                ->where('planos.user_id', '=', $user->id)
+                ->select('planos.id', 'disciplinas.codigo as codigo_disciplina', 'disciplinas.nome', 'turmas.codigo as codigo_turma'
+                    , 'planos.semestre', 'disciplinas.carga_horaria')
                 ->get();
         }
         return view('plano.index', compact('planos'));
@@ -80,7 +80,13 @@ class PlanoController extends Controller
      */
     public function show($id)
     {
-        $plano = Plano::findOrFail($id);
+        $plano = DB::table('planos')
+            ->join('turmas', 'turmas.id', '=', 'planos.turma_id')
+            ->join('disciplinas', 'disciplinas.id', '=', 'turmas.disciplina_id')
+            ->where('planos.id', '=', $id)
+            ->select('planos.id', 'disciplinas.codigo as codigo_disciplina', 'disciplinas.nome', 'turmas.codigo as codigo_turma'
+                , 'planos.semestre', 'disciplinas.carga_horaria')
+            ->first();
 
         return view('plano.show', compact('plano'));
     }
@@ -93,7 +99,13 @@ class PlanoController extends Controller
      */
     public function edit($id)
     {
-        $plano = Plano::findOrFail($id);
+        $plano = DB::table('planos')
+            ->join('turmas', 'turmas.id', '=', 'planos.turma_id')
+            ->join('disciplinas', 'disciplinas.id', '=', 'turmas.disciplina_id')
+            ->where('planos.id', '=', $id)
+            ->select('planos.id', 'disciplinas.codigo as codigo_disciplina', 'disciplinas.nome', 'turmas.codigo as codigo_turma'
+                , 'planos.semestre', 'disciplinas.carga_horaria')
+            ->first();
 
         return view('plano.edit', compact('plano'));
     }
