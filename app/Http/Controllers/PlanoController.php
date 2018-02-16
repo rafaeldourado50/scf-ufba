@@ -2,21 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\App;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Auth;
+
 use App\Plano;
-use Amranidev\Ajaxis\Ajaxis;
-use URL;
+
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class PlanoController.
- *
- * @author  The scaffold-interface created at 2018-02-07 06:04:33pm
- * @link  https://github.com/amranidev/scaffold-interface
  */
 class PlanoController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,9 +34,17 @@ class PlanoController extends Controller
      */
     public function index()
     {
-        $title = 'Index - plano';
-        $planos = Plano::paginate(6);
-        return view('plano.index',compact('planos','title'));
+        $user = Auth::user();
+        if (!empty($user))
+        {
+            $planos = DB::table('planos')
+                ->join('turmas', 'turmas.id', '=', 'planos.turma_id')
+                ->join('disciplinas', 'disciplinas.id', '=', 'turmas.disciplina_id')
+                ->where('user_id', '=', $user->id)
+                ->select('planos.id', 'disciplinas.nome', 'turmas.codigo', 'planos.semestre', 'disciplinas.carga_horaria')
+                ->get();
+        }
+        return view('plano.index', compact('planos'));
     }
 
     /**
@@ -36,8 +54,6 @@ class PlanoController extends Controller
      */
     public function create()
     {
-        $title = 'Create - plano';
-        
         return view('plano.create');
     }
 
@@ -49,75 +65,37 @@ class PlanoController extends Controller
      */
     public function store(Request $request)
     {
-        $plano = new Plano();
+        $requestData = $request->all();
 
-        
-        $plano->user_id = $request->user_id;
+        Plano::create($requestData);
 
-        
-        $plano->curso = $request->curso;
-
-        
-        $plano->semestre = $request->semestre;
-
-        
-        $plano->carga_horaria = $request->carga_horaria;
-
-        
-        
-        $plano->save();
-
-        $pusher = App::make('pusher');
-
-        //default pusher notification.
-        //by default channel=test-channel,event=test-event
-        //Here is a pusher notification example when you create a new resource in storage.
-        //you can modify anything you want or use it wherever.
-        $pusher->trigger('test-channel',
-                         'test-event',
-                        ['message' => 'A new plano has been created !!']);
-
-        $id = $plano->id;
-        return view('aluno.create', compact('id'));
+        return redirect('plano')->with('success', 'Plano cadastrado com sucesso!');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param    \Illuminate\Http\Request  $request
      * @param    int  $id
      * @return  \Illuminate\Http\Response
      */
-    public function show($id,Request $request)
+    public function show($id)
     {
-        $title = 'Show - plano';
+        $plano = Plano::findOrFail($id);
 
-        if($request->ajax())
-        {
-            return URL::to('plano/'.$id);
-        }
-
-        $plano = Plano::findOrfail($id);
-        return view('plano.show',compact('title','plano'));
+        return view('plano.show', compact('plano'));
     }
 
     /**
      * Show the form for editing the specified resource.
-     * @param    \Illuminate\Http\Request  $request
+     *
      * @param    int  $id
      * @return  \Illuminate\Http\Response
      */
-    public function edit($id,Request $request)
+    public function edit($id)
     {
-        $title = 'Edit - plano';
-        if($request->ajax())
-        {
-            return URL::to('plano/'. $id . '/edit');
-        }
+        $plano = Plano::findOrFail($id);
 
-        
-        $plano = Plano::findOrfail($id);
-        return view('plano.edit',compact('title','plano'  ));
+        return view('plano.edit', compact('plano'));
     }
 
     /**
@@ -127,39 +105,14 @@ class PlanoController extends Controller
      * @param    int  $id
      * @return  \Illuminate\Http\Response
      */
-    public function update($id,Request $request)
+    public function update(Request $request, $id)
     {
-        $plano = Plano::findOrfail($id);
-    	
-        $plano->user_id = $request->user_id;
-        
-        $plano->curso = $request->curso;
-        
-        $plano->semestre = $request->semestre;
-        
-        $plano->carga_horaria = $request->carga_horaria;
-        
-        
-        $plano->save();
+        $requestData = $request->all();
 
-        return redirect('plano/' .$plano->id .'#');
-    }
+        $plano = Plano::findOrFail($id);
+        $plano->update($requestData);
 
-    /**
-     * Delete confirmation message by Ajaxis.
-     *
-     * @link      https://github.com/amranidev/ajaxis
-     * @param    \Illuminate\Http\Request  $request
-     * @return  String
-     */
-    public function DeleteMsg($id,Request $request)
-    {
-        $msg = Ajaxis::MtDeleting('Warning!!','Would you like to remove This?','/plano/'. $id . '/delete');
-
-        if($request->ajax())
-        {
-            return $msg;
-        }
+        return redirect('plano')->with('success', 'Plano atualizado com sucesso!');
     }
 
     /**
@@ -170,8 +123,8 @@ class PlanoController extends Controller
      */
     public function destroy($id)
     {
-     	$plano = Plano::findOrfail($id);
-     	$plano->delete();
-        return redirect('/plano');
+        Plano::destroy($id);
+
+        return redirect('plano')->with('success', 'Plano removido com sucesso!');
     }
 }

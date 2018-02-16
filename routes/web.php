@@ -19,16 +19,15 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-
 //plano Routes
-Route::group(['middleware'=> 'web'],function(){
+Route::group(['middleware'=> 'web'], function(){
   Route::resource('plano','\App\Http\Controllers\PlanoController');
-  Route::post('plano/{id}/update','\App\Http\Controllers\PlanoController@update');
-  Route::get('plano/{id}/delete','\App\Http\Controllers\PlanoController@destroy');
-  Route::get('plano/{id}/deleteMsg','\App\Http\Controllers\PlanoController@DeleteMsg');
 });
 
-//aluno Routes
+Route::get('import',  ['as'=>'import', 'uses'=>'ExcelController@import']);
+Route::post('import', ['as'=>'import', 'uses'=>'ExcelController@store']);
+
+/*aluno Routes
 Route::group(['middleware'=> 'web'],function(){
   Route::resource('aluno','\App\Http\Controllers\AlunoController');
   Route::post('aluno/{id}/update','\App\Http\Controllers\AlunoController@update');
@@ -38,24 +37,21 @@ Route::group(['middleware'=> 'web'],function(){
   Route::get('aluno/{id}/consulta','\App\Http\Controllers\AlunoController@consulta');
   Route::get('aluno/{id}/chamada','\App\Http\Controllers\AlunoController@chamada');
   Route::get('aluno/{id}/deleteMsg','\App\Http\Controllers\AlunoController@DeleteMsg');
-});
+});*/
 
-//aula Routes
+/*aula Routes
 Route::group(['middleware'=> 'web'],function(){
   Route::resource('aula','\App\Http\Controllers\AulaController');
   Route::post('aula/{id}/update','\App\Http\Controllers\AulaController@update');
   Route::get('aula/{id}/delete','\App\Http\Controllers\AulaController@destroy');
   Route::get('aula/{id}/consulta','\App\Http\Controllers\AulaController@consulta');
   Route::get('aula/{id}/deleteMsg','\App\Http\Controllers\AulaController@DeleteMsg');
-});
+});*/
 
-Route::get('import',['as'=>'import','uses'=>'ExcelController@getImport']);
-Route::post('import',['as'=>'import','uses'=>'ExcelController@postImport']);
-
-//chamada Routes
+/*chamada Routes
 Route::group(['middleware'=> 'web'],function(){
   Route::resource('chamada','\App\Http\Controllers\ChamadaController');
   Route::post('chamada/{id}/update','\App\Http\Controllers\ChamadaController@update');
   Route::get('chamada/{id}/delete','\App\Http\Controllers\ChamadaController@destroy');
   Route::get('chamada/{id}/deleteMsg','\App\Http\Controllers\ChamadaController@DeleteMsg');
-});
+});*/

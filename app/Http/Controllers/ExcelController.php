@@ -2,66 +2,92 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Input;
+use Auth;
 use Excel;
-use App\Plano;
+
 use App\Aluno;
 use App\Aula;
-use Auth;
+use App\Disciplina;
+use App\Horario;
+use App\Plano;
+use App\Turma;
 
+use App\Http\Controllers\Controller;
+
+use Carbon\Carbon;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 
 class ExcelController extends Controller
 {
 
-    public function getImport(){
-    	return view('plano.create');
+    public function import()
+    {
+    	return view('excel.import');
     }
 
-    public function postImport(){
+    public function store()
+    {
+        $result = Excel::load(Input::file('file'), function($reader) {
 
-    	$alunos = Excel::load(Input::file('file'), function($reader){
-    	})->get();
+        })->get();
 
-        //criando o plano
+        $semestre = $result->first()->semestre;
+        $codigo_disciplina = $result->first()->disciplina;
+        $codigo_turma = $result->first()->turma;
+
+        $disciplina = Disciplina::where('codigo', '=', $codigo_disciplina)->first();
+
+        $turma = Turma::where([
+            ['codigo', '=', $codigo_turma],
+            ['disciplina_id', '=', $disciplina->id],
+        ])->first();
+
+        // criando o plano
         $plano = new Plano();
-
-        $plano->user_id = Auth::user()->id;        
-        $plano->curso = $alunos->first()->curso;           
-        $plano->semestre = $alunos->first()->semestre;       
-        $plano->carga_horaria = $alunos->first()->carga_horaria;
-        
+        $plano->user_id = Auth::user()->id;
+        $plano->semestre = $semestre;
+        $plano->turma_id = $turma->id;
         $plano->save();
 
-        for($i = $plano->carga_horaria; $i > 0; $i--){
-            $aula = new Aula();
+        $horarios = Horario::where('turma_id', '=', $turma->id)->orderBy('dia')->get();
 
-            $aula->plano_id = $plano->id;
-            $aula->data = "";
-            $aula->tema = "";
-            $aula->descricao = "";
-            
-            $aula->save();
+        $data_ini = Carbon::createFromDate(2017, 10, 02);
+        $data_fim = Carbon::createFromDate(2018, 02, 24);
+
+        while ($data_ini->diffInDays($data_fim, false) > 0) {
+
+            $data_atual = $data_ini->copy();
+
+            foreach ($horarios as $horario) {
+
+                $diff = $horario->dia - $data_atual->dayOfWeek;
+                if ($diff > 0) {
+                    $data_atual->addDays($diff);
+                }
+                // criando as aulas
+                $aula = new Aula();
+                $aula->plano_id = $plano->id;
+                $aula->data = $data_atual;
+                $aula->save();
+            }
+
+            $data_ini->addWeek();
         }
 
-        //criando os alunos
-        foreach ($alunos as $aluno) {
-                
-
-                $novoAluno = new Aluno();
-
-                $novoAluno->plano_id = $plano->id;
-                $novoAluno->nome = $aluno->nome;
-                $novoAluno->email = $aluno->email;
-                $novoAluno->faltas = 0;
-
-                $novoAluno->save();
+        // criando os alunos
+        foreach ($result as $row) {
+            $aluno = new Aluno();
+            $aluno->plano_id = $plano->id;
+            $aluno->matricula = $row->matricula;
+            $aluno->nome = $row->nome;
+            $aluno->email = $row->email;
+            $aluno->faltas = 0;
+            $aluno->save();
         }
 
-        //pegando variaveis
-
-
-        return redirect("/plano/$plano->id");
+        return redirect("plano")->with('success', 'Plano importado com sucesso!');;
     }
 }
