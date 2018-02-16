@@ -1,53 +1,71 @@
 @extends('layouts.app')
 
 @section('content')
-<div class = 'container'>
-    <h1>
-        chamada Index
-    </h1>
     <div class="row">
-        <form class = 'col s3' method = 'get' action = '{!!url("chamada")!!}/create'>
-            <button class = 'btn red' type = 'submit'>Create New chamada</button>
-        </form>
-        <ul id="dropdown" class="dropdown-content">
-            <li><a href="http://localhost:8000/aluno">Aluno</a></li>
-            <li><a href="http://localhost:8000/aula">Aula</a></li>
-        </ul>
-        <a class="col s3 btn dropdown-button #1e88e5 blue darken-1" href="#!" data-activates="dropdown">Associate<i class="mdi-navigation-arrow-drop-down right"></i></a>
-    </div>
-    <table>
-        <thead>
-            <th>falta</th>
-            <th>nome</th>
-            <th>email</th>
-            <th>faltas</th>
-            <th>data</th>
-            <th>tema</th>
-            <th>descricao</th>
-            <th>actions</th>
-        </thead>
-        <tbody>
-            @foreach($chamadas as $chamada) 
-            <tr>
-                <td>{!!$chamada->falta!!}</td>
-                <td>{!!$chamada->aluno->nome!!}</td>
-                <td>{!!$chamada->aluno->email!!}</td>
-                <td>{!!$chamada->aluno->faltas!!}</td>
-                <td>{!!$chamada->aula->data!!}</td>
-                <td>{!!$chamada->aula->tema!!}</td>
-                <td>{!!$chamada->aula->descricao!!}</td>
-                <td>
-                    <div class = 'row'>
-                        <a href = '#modal1' class = 'delete btn-floating modal-trigger red' data-link = "/chamada/{!!$chamada->id!!}/deleteMsg" ><i class = 'material-icons'>delete</i></a>
-                        <a href = '#' class = 'viewEdit btn-floating blue' data-link = '/chamada/{!!$chamada->id!!}/edit'><i class = 'material-icons'>edit</i></a>
-                        <a href = '#' class = 'viewShow btn-floating orange' data-link = '/chamada/{!!$chamada->id!!}'><i class = 'material-icons'>info</i></a>
-                    </div>
-                </td>
-            </tr>
-            @endforeach 
-        </tbody>
-    </table>
-    {!! $chamadas->render() !!}
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Lista de Chamadas</div>
 
-</div>
+                <div class="panel-body">
+
+                    @include('admin.info')
+
+                    <div class="form-group">
+                        <div class="pull-left">
+                            <a href="{{ url('/chamada/create') }}" class="btn btn-success">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Novo
+                            </a>
+                        </div>
+                    </div>
+
+                    <br/><br/>
+
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <thead>
+                            <tr>
+                                <th>Falta</th>
+                                <th>Nome</th>
+                                <th>E-mail</th>
+                                <th>Faltas</th>
+                                <th>Data</th>
+                                <th>Tema</th>
+                                <th>Descricao</th>
+                                <th style="width: 150px !important;">Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($chamadas as $chamada)
+                                <tr>
+                                    <td>{!!$chamada->falta!!}</td>
+                                    <td>{!!$chamada->aluno->nome!!}</td>
+                                    <td>{!!$chamada->aluno->email!!}</td>
+                                    <td>{!!$chamada->aluno->faltas!!}</td>
+                                    <td>{!!$chamada->aula->data!!}</td>
+                                    <td>{!!$chamada->aula->tema!!}</td>
+                                    <td>{!!$chamada->aula->descricao!!}</td>
+                                    <td>
+                                        <a href="{{ url('/chamada/' . $chamada->id) }}" title="Visualizar">
+                                            <button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                                        </a>
+
+                                        <a href="{{ url('/chamada/' . $chamada->id . '/edit') }}" title="Editar">
+                                            <button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                                        </a>
+
+                                        <form method="POST" action="{{ url('/chamada/' . $chamada->id) }}" accept-charset="UTF-8" style="display:inline">
+                                            {{ method_field('DELETE') }}
+                                            {{ csrf_field() }}
+                                            <button type="submit" class="btn btn-danger btn-sm" title="Excluir" onclick="return confirm(&quot;Confirma exclusão?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

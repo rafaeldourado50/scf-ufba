@@ -49,6 +49,11 @@ Route::group(['middleware'=> 'web'], function() {
     Route::delete('plano/{plano}/aula/{aula}', ['as' => 'aula.destroy', 'uses' => 'AulaController@destroy']);
 });
 
+//frequencia Routes
+Route::group(['middleware'=> 'web'],function() {
+    Route::get('plano/{plano}/frequencia', ['as' => 'frequencia.index', 'uses' => 'FrequenciaController@index']);
+});
+
 //chamada Routes
 Route::group(['middleware'=> 'web'],function() {
     Route::resource('chamada', '\App\Http\Controllers\ChamadaController');

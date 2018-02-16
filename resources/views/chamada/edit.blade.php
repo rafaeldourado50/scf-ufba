@@ -1,39 +1,65 @@
 @extends('layouts.app')
 
 @section('content')
-<div class = 'container'>
-    <h1>
-        Edit chamada
-    </h1>
-    <form method = 'get' action = '{!!url("chamada")!!}'>
-        <button class = 'btn blue'>chamada Index</button>
-    </form>
-    <br>
-    <form method = 'POST' action = '{!! url("chamada")!!}/{!!$chamada->
-        id!!}/update'> 
-        <input type = 'hidden' name = '_token' value = '{{Session::token()}}'>
-        <div class="input-field col s6">
-            <input id="falta" name = "falta" type="text" class="validate" value="{!!$chamada->
-            falta!!}"> 
-            <label for="falta">falta</label>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Editar Chamada</div>
+
+                <div class="panel-body">
+
+                    <form method="POST" action="{{ url('/chamada' . $chamada->id) }}" accept-charset="UTF-8" enctype="multipart/form-data">
+                        {{ method_field('PATCH') }}
+                        {{ csrf_field() }}
+
+                        <div class="row">
+                            <label for="falta" class="col-md-4 control-label">{{ 'Falta' }}</label>
+                            <div class="col-md-12">
+                                <input class="form-control" name="falta" type="text" id="falta" value="{!!$chamada->falta!!}">
+                                {!! $errors->first('falta', '<p class="help-block">:message</p>') !!}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <label for="aluno_id" class="col-md-4 control-label">{{ 'Aluno' }}</label>
+                            <div class="col-md-12">
+                                <select name="aluno_id">
+                                    <option value="{!! $chamada->aluno->id !!}" >{!! $chamada->aluno->nome !!}</option>
+                                    @foreach($alunos as $key => $value)
+                                        <option value="{{$key}}">{{$value}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <label for="aula_id" class="col-md-4 control-label">{{ 'Aula' }}</label>
+                            <div class="col-md-12">
+                                <select name="aula_id">
+                                    <option value="{!! $chamada->aula->id !!}" >{!! $chamada->aula->data !!}</option>
+                                    @foreach($aulas as $key => $value)
+                                        <option value="{{$key}}">{{$value}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 6px;">
+                            <div class="pull-left">
+                                <button class="btn btn-success" type="submit">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Gravar
+                                </button>
+                            </div>
+                            <div class="pull-right">
+                                <a href="{{ url('/chamada') }}" class="btn btn-danger">
+                                    <i class="fa fa-ban" aria-hidden="true"></i> Cancelar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
         </div>
-        <div class="input-field col s12">
-            <select name = 'aluno_id'>
-                @foreach($alunos as $key => $value) 
-                <option value="{{$key}}">{{$value}}</option>
-                @endforeach 
-            </select>
-            <label>alunos Select</label>
-        </div>
-        <div class="input-field col s12">
-            <select name = 'aula_id'>
-                @foreach($aulas as $key => $value) 
-                <option value="{{$key}}">{{$value}}</option>
-                @endforeach 
-            </select>
-            <label>aulas Select</label>
-        </div>
-        <button class = 'btn red' type ='submit'>Update</button>
-    </form>
-</div>
+    </div>
 @endsection

@@ -1,74 +1,59 @@
 @extends('layouts.app')
 
 @section('content')
-<div class = 'container'>
-    <h1>
-        Show chamada
-    </h1>
-    <form method = 'get' action = '{!!url("chamada")!!}'>
-        <button class = 'btn blue'>chamada Index</button>
-    </form>
-    <table class = 'highlight bordered'>
-        <thead>
-            <th>Key</th>
-            <th>Value</th>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    <b><i>falta : </i></b>
-                </td>
-                <td>{!!$chamada->falta!!}</td>
-            </tr>
-            <tr>
-                <td>
-                    <b>
-                        <i>nome : </i>
-                        <b>
-                        </td>
-                        <td>{!!$chamada->aluno->nome!!}</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <b>
-                                <i>email : </i>
-                                <b>
-                                </td>
-                                <td>{!!$chamada->aluno->email!!}</td>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">Exibir Chamada</div>
+
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <tbody>
+                            <tr>
+                                <th class="col-md-2"> Falta </th><td class="col-md-10"> {!!$chamada->falta!!} </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <b>
-                                        <i>faltas : </i>
-                                        <b>
-                                        </td>
-                                        <td>{!!$chamada->aluno->faltas!!}</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <b>
-                                                <i>data : </i>
-                                                <b>
-                                                </td>
-                                                <td>{!!$chamada->aula->data!!}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <b>
-                                                        <i>tema : </i>
-                                                        <b>
-                                                        </td>
-                                                        <td>{!!$chamada->aula->tema!!}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <b>
-                                                                <i>descricao : </i>
-                                                                <b>
-                                                                </td>
-                                                                <td>{!!$chamada->aula->descricao!!}</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                @endsection
+                                <th class="col-md-2"> Nome </th><td class="col-md-10"> {!!$chamada->aluno->nome!!} </td>
+                            </tr>
+                            <tr>
+                                <th class="col-md-2"> E-mail </th><td class="col-md-10"> {!!$chamada->aluno->email!!} </td>
+                            </tr>
+                            <tr>
+                                <th class="col-md-2"> Faltas </th><td class="col-md-10"> {!!$chamada->aluno->faltas!!} </td>
+                            </tr>
+                            <tr>
+                                <th class="col-md-2"> Data </th><td class="col-md-10"> {!!$chamada->aula->data!!} </td>
+                            </tr>
+                            <tr>
+                                <th class="col-md-2"> Tema </th><td class="col-md-10"> {!!$chamada->aula->tema!!} </td>
+                            </tr>
+                            <tr>
+                                <th class="col-md-2"> Descricao </th><td class="col-md-10"> {!!$chamada->aula->descricao!!} </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="pull-left">
+                        <a href="{{ url('/chamada/' . $chamada->id . '/edit') }}" class="btn btn-primary">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Editar
+                        </a>
+
+                        <form method="POST" action="{{ url('/chamada/' . $chamada->id) }}" accept-charset="UTF-8" style="display:inline">
+                            {{ method_field('DELETE') }}
+                            {{ csrf_field() }}
+                            <button type="submit" class="btn btn-danger" onclick="return confirm(&quot;Confirma exclusão?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> Excluir</button>
+                        </form>
+                    </div>
+
+                    <div class="pull-right">
+                        <a href="{{ url('/chamada') }}" class="btn btn-warning">
+                            <i class="fa fa-arrow-left" aria-hidden="true"></i> Voltar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
