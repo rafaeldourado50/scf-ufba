@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Lista de Chamadas</div>
+                <div class="panel-heading">Lista de Frequências: {{ $aula->data }}</div>
 
                 <div class="panel-body">
 
@@ -12,8 +12,13 @@
 
                     <div class="form-group">
                         <div class="pull-left">
-                            <a href="{{ url('/chamada/create') }}" class="btn btn-success">
+                            <a href="{{ url('/plano/' . $plano_id . '/aula/' . $aula->id . '/frequencia/create') }}" class="btn btn-success">
                                 <i class="fa fa-plus" aria-hidden="true"></i> Novo
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <a href="{{ url('/plano/' . $plano_id . '/aula') }}" class="btn btn-warning">
+                                <i class="fa fa-arrow-left" aria-hidden="true"></i> Voltar
                             </a>
                         </div>
                     </div>
@@ -26,37 +31,35 @@
                             <tr>
                                 <th>Falta</th>
                                 <th>Nome</th>
-                                <th>E-mail</th>
+                                <th>Matrícula</th>
                                 <th>Faltas</th>
                                 <th>Data</th>
                                 <th>Tema</th>
-                                <th>Descricao</th>
                                 <th style="width: 150px !important;">Ações</th>
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach($chamadas as $chamada)
+                            @foreach($aula->frequencias as $frequencia)
                                 <tr>
-                                    <td>{!!$chamada->falta!!}</td>
-                                    <td>{!!$chamada->aluno->nome!!}</td>
-                                    <td>{!!$chamada->aluno->email!!}</td>
-                                    <td>{!!$chamada->aluno->faltas!!}</td>
-                                    <td>{!!$chamada->aula->data!!}</td>
-                                    <td>{!!$chamada->aula->tema!!}</td>
-                                    <td>{!!$chamada->aula->descricao!!}</td>
+                                    <td>{{ $frequencia->falta }}</td>
+                                    <td>{{ $frequencia->aluno->nome }}</td>
+                                    <td>{{ $frequencia->aluno->matricula }}</td>
+                                    <td>{{ $frequencia->aluno->faltas }}</td>
+                                    <td>{{ $frequencia->aula->data }}</td>
+                                    <td>{{ $frequencia->aula->tema }}</td>
                                     <td>
-                                        <a href="{{ url('/chamada/' . $chamada->id) }}" title="Visualizar">
+                                        <a href="{{ url('/plano/' . $plano_id . '/aula/' . $aula->id . '/frequencia/' . $frequencia->id) }}" title="Visualizar">
                                             <button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button>
                                         </a>
 
-                                        <a href="{{ url('/chamada/' . $chamada->id . '/edit') }}" title="Editar">
+                                        <a href="{{ url('/plano/' . $plano_id . '/aula/' . $aula->id . '/frequencia/' . $frequencia->id . '/edit') }}" title="Editar">
                                             <button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
                                         </a>
 
-                                        <form method="POST" action="{{ url('/chamada/' . $chamada->id) }}" accept-charset="UTF-8" style="display:inline">
+                                        <form method="POST" action="{{ url('/plano/' . $plano_id . '/aula/' . $aula->id . '/frequencia/' . $frequencia->id) }}" accept-charset="UTF-8" style="display:inline">
                                             {{ method_field('DELETE') }}
                                             {{ csrf_field() }}
-                                            <button type="submit" class="btn btn-danger btn-sm" title="Excluir" onclick="return confirm(&quot;Confirma exclusão?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                            <button type="submit" class="btn btn-danger btn-sm" title="Excluir" onclick="return confirm(&quot;Confirma exclusão?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> </button>
                                         </form>
                                     </td>
                                 </tr>

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Chamada extends Model
+class Frequencia extends Model
 {
     public $timestamps = false;
 

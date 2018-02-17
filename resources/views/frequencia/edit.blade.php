@@ -4,43 +4,39 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Nova Chamada</div>
+                <div class="panel-heading">Editar Frequência</div>
 
                 <div class="panel-body">
 
-                    <form method="POST" action="{{ url('/chamada') }}" accept-charset="UTF-8" enctype="multipart/form-data">
-
+                    <form method="POST" action="{{ url('/plano/' . $plano_id . '/aula/' . $aula->id . '/frequencia/' . $frequencia->id) }}" accept-charset="UTF-8" enctype="multipart/form-data">
+                        {{ method_field('PATCH') }}
                         {{ csrf_field() }}
 
                         <div class="row">
-                            <label for="falta" class="col-md-4 control-label">{{ 'Falta' }}</label>
+                            <label for="aula" class="col-md-4 control-label">{{ 'Aula' }}</label>
                             <div class="col-md-12">
-                                <input class="form-control" name="falta" type="text" id="falta" >
-                                {!! $errors->first('falta', '<p class="help-block">:message</p>') !!}
+                                <input class="form-control" name="aula" type="text" id="aula" value="{{ $aula->data }}" disabled>
                             </div>
                         </div>
 
-                        <div class="row">
-                            <label for="aluno_id" class="col-md-4 control-label">{{ 'Aluno' }}</label>
+                        <div class="row {{ $errors->has('aluno') ? 'has-error' : ''}}">
+                            <label for="aluno" class="col-md-4 control-label">{{ 'Aluno' }}</label>
                             <div class="col-md-12">
-                                <select name="aluno_id">
-                                    <option value="" >--- Selecione ---</option>
+                                <select name="aluno" class="form-control">
+                                    <option value="{{ $frequencia->aluno->id }}" >{{ $frequencia->aluno->nome }}</option>
                                     @foreach($alunos as $key => $value)
                                         <option value="{{$key}}">{{$value}}</option>
                                     @endforeach
                                 </select>
+                                {!! $errors->first('aluno', '<p class="help-block">:message</p>') !!}
                             </div>
                         </div>
 
-                        <div class="row">
-                            <label for="aula_id" class="col-md-4 control-label">{{ 'Aula' }}</label>
+                        <div class="row {{ $errors->has('falta') ? 'has-error' : ''}}">
+                            <label for="falta" class="col-md-4 control-label">{{ 'Falta' }}</label>
                             <div class="col-md-12">
-                                <select name="aula_id">
-                                    <option value="" >--- Selecione ---</option>
-                                    @foreach($aulas as $key => $value)
-                                        <option value="{{$key}}">{{$value}}</option>
-                                    @endforeach
-                                </select>
+                                <input class="form-control" name="falta" type="text" id="falta" value="{{ $frequencia->falta }}">
+                                {!! $errors->first('falta', '<p class="help-block">:message</p>') !!}
                             </div>
                         </div>
 
@@ -51,7 +47,7 @@
                                 </button>
                             </div>
                             <div class="pull-right">
-                                <a href="{{ url('/chamada') }}" class="btn btn-danger">
+                                <a href="{{ url('/plano/' . $plano_id . '/aula/' . $aula->id . '/frequencia') }}" class="btn btn-danger">
                                     <i class="fa fa-ban" aria-hidden="true"></i> Cancelar
                                 </a>
                             </div>

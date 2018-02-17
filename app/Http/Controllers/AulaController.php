@@ -56,8 +56,6 @@ class AulaController extends Controller
     {
         $this->validate($request, [
             'data' => 'required',
-            'tema' => 'required',
-            'descricao' => 'required',
         ]);
 
         $aula = new Aula();
@@ -112,8 +110,6 @@ class AulaController extends Controller
     {
         $this->validate($request, [
             'data' => 'required',
-            'tema' => 'required',
-            'descricao' => 'required',
         ]);
 
         $aula = Aula::findOrFail($id);

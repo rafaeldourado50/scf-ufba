@@ -24,7 +24,7 @@ Route::group(['middleware'=> 'web'], function() {
     Route::resource('plano', '\App\Http\Controllers\PlanoController');
 });
 
-Route::get('import',  ['as'=>'import', 'uses'=>'ExcelController@import']);
+Route::get('import', ['as'=>'import', 'uses'=>'ExcelController@import']);
 Route::post('import', ['as'=>'import', 'uses'=>'ExcelController@store']);
 
 //aluno Routes
@@ -36,9 +36,6 @@ Route::group(['middleware'=> 'web'], function() {
     Route::get('plano/{plano}/aluno/{aluno}/edit', ['as' => 'aluno.edit', 'uses' => 'AlunoController@edit']);
     Route::patch('plano/{plano}/aluno/{aluno}', ['as' => 'aluno.update', 'uses' => 'AlunoController@update']);
     Route::delete('plano/{plano}/aluno/{aluno}', ['as' => 'aluno.destroy', 'uses' => 'AlunoController@destroy']);
-    Route::get('plano/{plano}/aluno/{aluno}/chamada', '\App\Http\Controllers\AlunoController@chamada');
-    Route::get('plano/{plano}/aluno/{aluno}/registrar', '\App\Http\Controllers\AlunoController@registrar');
-    Route::get('plano/{plano}/aluno/{aluno}/desregistrar', '\App\Http\Controllers\AlunoController@desregistrar');
 });
 
 //aula Routes
@@ -53,7 +50,7 @@ Route::group(['middleware'=> 'web'], function() {
 });
 
 //frequencia Routes
-Route::group(['middleware'=> 'web'],function() {
+Route::group(['middleware'=> 'web'], function() {
     Route::get('plano/{plano}/aula/{aula}/frequencia', ['as' => 'frequencia.index', 'uses' => 'FrequenciaController@index']);
     Route::get('plano/{plano}/aula/{aula}/frequencia/create', ['as' => 'frequencia.create', 'uses' => 'FrequenciaController@create']);
     Route::post('plano/{plano}/aula/{aula}/frequencia', ['as' => 'frequencia.store', 'uses' => 'FrequenciaController@store']);
@@ -64,6 +61,8 @@ Route::group(['middleware'=> 'web'],function() {
 });
 
 //chamada Routes
-Route::group(['middleware'=> 'web'],function() {
-    Route::resource('chamada', '\App\Http\Controllers\ChamadaController');
+Route::group(['middleware'=> 'web'], function() {
+    Route::get('plano/{plano}/aluno/{aluno}/chamada', '\App\Http\Controllers\AlunoController@chamada');
+    Route::get('plano/{plano}/aluno/{aluno}/registrar', '\App\Http\Controllers\AlunoController@registrar');
+    Route::get('plano/{plano}/aluno/{aluno}/desregistrar', '\App\Http\Controllers\AlunoController@desregistrar');
 });

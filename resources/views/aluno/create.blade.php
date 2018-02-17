@@ -12,19 +12,19 @@
 
                         {{ csrf_field() }}
 
-                        <div class="row {{ $errors->has('matricula') ? 'has-error' : ''}}">
-                            <label for="matricula" class="col-md-4 control-label">{{ 'Matrícula' }}</label>
-                            <div class="col-md-12">
-                                <input class="form-control" name="matricula" type="text" id="matricula" value="{{ '' }}" >
-                                {!! $errors->first('matricula', '<p class="help-block">:message</p>') !!}
-                            </div>
-                        </div>
-
                         <div class="row {{ $errors->has('nome') ? 'has-error' : ''}}">
                             <label for="nome" class="col-md-4 control-label">{{ 'Nome' }}</label>
                             <div class="col-md-12">
                                 <input class="form-control" name="nome" type="text" id="nome" value="{{ '' }}" >
                                 {!! $errors->first('nome', '<p class="help-block">:message</p>') !!}
+                            </div>
+                        </div>
+
+                        <div class="row {{ $errors->has('matricula') ? 'has-error' : ''}}">
+                            <label for="matricula" class="col-md-4 control-label">{{ 'Matrícula' }}</label>
+                            <div class="col-md-12">
+                                <input class="form-control" name="matricula" type="text" id="matricula" value="{{ '' }}" >
+                                {!! $errors->first('matricula', '<p class="help-block">:message</p>') !!}
                             </div>
                         </div>
 

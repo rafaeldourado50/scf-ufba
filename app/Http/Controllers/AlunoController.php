@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Aluno;
-use App\Aula;
 use App\Plano;
 
 use Illuminate\Http\Request;

@@ -12,10 +12,10 @@
                         <table class="table table-borderless">
                             <tbody>
                             <tr>
-                                <th class="col-md-2"> Matricula </th><td class="col-md-10"> {{ $aluno->matricula }} </td>
+                                <th class="col-md-2"> Nome </th><td class="col-md-10"> {{ $aluno->nome }} </td>
                             </tr>
                             <tr>
-                                <th class="col-md-2"> Nome </th><td class="col-md-10"> {{ $aluno->nome }} </td>
+                                <th class="col-md-2"> Matricula </th><td class="col-md-10"> {{ $aluno->matricula }} </td>
                             </tr>
                             <tr>
                                 <th class="col-md-2"> E-mail </th><td class="col-md-10"> {{ $aluno->email }} </td>
