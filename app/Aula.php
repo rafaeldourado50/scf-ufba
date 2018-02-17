@@ -17,8 +17,8 @@ class Aula extends Model
         return $this->belongsTo('App\Plano');
     }
 
-    public function chamada()
+    public function chamadas()
     {
-        return $this->hasOne('App\Chamada');
+        return $this->hasMany('App\Chamada');
     }
 }

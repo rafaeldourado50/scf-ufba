@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Aluno;
+use App\Aula;
 use App\Plano;
 
 use Illuminate\Http\Request;
@@ -22,6 +23,7 @@ class AlunoController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param    int  $plano_id
      * @return  \Illuminate\Http\Response
      */
     public function index($plano_id)
@@ -34,6 +36,7 @@ class AlunoController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param    int  $plano_id
      * @return  \Illuminate\Http\Response
      */
     public function create($plano_id)
@@ -147,22 +150,21 @@ class AlunoController extends Controller
         return view('aluno.index',compact('alunos','title','plano_id'));
     }
 
-    public function registrar($id)
+    public function registrar($plano_id, $id)
     {
         $aluno = Aluno::findOrfail($id);
         $plano = Plano::findOrfail($aluno->plano_id);
-        if($aluno->faltas < $plano->carga_horaria){
-            $aluno->faltas = $aluno->faltas + 1;
-            $aluno->save();
-        }
-        $plano_id = $plano->id;
-        $title = 'Lista de Alunos';
-        $alunos = Aluno::paginate(6);
 
-        return view('aluno.chamada',compact('alunos','title','plano_id'));
+        $aluno->faltas = $aluno->faltas + 1;
+        $aluno->save();
+
+        $plano_id = $plano->id;
+        $alunos = Aluno::all();
+
+        return view('aluno.chamada',compact('alunos','plano_id'));
     }
 
-    public function desregistrar($id)
+    public function desregistrar($plano_id, $id)
     {
         $aluno = Aluno::findOrfail($id);
         if($aluno->faltas > 0){
@@ -170,17 +172,16 @@ class AlunoController extends Controller
             $aluno->save();
         }
         $plano_id = $aluno->plano_id;
-        $title = 'Lista de Alunos';
-        $alunos = Aluno::paginate(6);
+        $alunos = Aluno::all();
 
-        return view('aluno.chamada',compact('alunos','title','plano_id'));
+        return view('aluno.chamada',compact('alunos','plano_id'));
     }
 
     public function chamada($id)
     {
         $plano_id = $id;
-        $title = 'Lista de Alunos';
-        $alunos = Aluno::paginate(6);
-        return view('aluno.chamada',compact('alunos','title','plano_id'));
+        $alunos = Aluno::all();
+
+        return view('aluno.chamada',compact('alunos', 'plano_id'));
     }
 }

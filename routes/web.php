@@ -36,6 +36,9 @@ Route::group(['middleware'=> 'web'], function() {
     Route::get('plano/{plano}/aluno/{aluno}/edit', ['as' => 'aluno.edit', 'uses' => 'AlunoController@edit']);
     Route::patch('plano/{plano}/aluno/{aluno}', ['as' => 'aluno.update', 'uses' => 'AlunoController@update']);
     Route::delete('plano/{plano}/aluno/{aluno}', ['as' => 'aluno.destroy', 'uses' => 'AlunoController@destroy']);
+    Route::get('plano/{plano}/aluno/{aluno}/chamada', '\App\Http\Controllers\AlunoController@chamada');
+    Route::get('plano/{plano}/aluno/{aluno}/registrar', '\App\Http\Controllers\AlunoController@registrar');
+    Route::get('plano/{plano}/aluno/{aluno}/desregistrar', '\App\Http\Controllers\AlunoController@desregistrar');
 });
 
 //aula Routes
@@ -51,7 +54,13 @@ Route::group(['middleware'=> 'web'], function() {
 
 //frequencia Routes
 Route::group(['middleware'=> 'web'],function() {
-    Route::get('plano/{plano}/frequencia', ['as' => 'frequencia.index', 'uses' => 'FrequenciaController@index']);
+    Route::get('plano/{plano}/aula/{aula}/frequencia', ['as' => 'frequencia.index', 'uses' => 'FrequenciaController@index']);
+    Route::get('plano/{plano}/aula/{aula}/frequencia/create', ['as' => 'frequencia.create', 'uses' => 'FrequenciaController@create']);
+    Route::post('plano/{plano}/aula/{aula}/frequencia', ['as' => 'frequencia.store', 'uses' => 'FrequenciaController@store']);
+    Route::get('plano/{plano}/aula/{aula}/frequencia/{frequencia}', ['as' => 'frequencia.show', 'uses' => 'FrequenciaController@show']);
+    Route::get('plano/{plano}/aula/{aula}/frequencia/{frequencia}/edit', ['as' => 'frequencia.edit', 'uses' => 'FrequenciaController@edit']);
+    Route::patch('plano/{plano}/aula/{aula}/frequencia/{frequencia}', ['as' => 'frequencia.update', 'uses' => 'FrequenciaController@update']);
+    Route::delete('plano/{plano}/aula/{aula}/frequencia/{frequencia}', ['as' => 'frequencia.destroy', 'uses' => 'FrequenciaController@destroy']);
 });
 
 //chamada Routes

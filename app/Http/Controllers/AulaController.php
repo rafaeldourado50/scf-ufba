@@ -22,6 +22,7 @@ class AulaController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param    int  $plano_id
      * @return  \Illuminate\Http\Response
      */
     public function index($plano_id)
@@ -34,6 +35,7 @@ class AulaController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param    int  $plano_id
      * @return  \Illuminate\Http\Response
      */
     public function create($plano_id)
