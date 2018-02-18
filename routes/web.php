@@ -19,13 +19,13 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('import', ['as'=>'import', 'uses'=>'ExcelController@import']);
+Route::post('import', ['as'=>'import', 'uses'=>'ExcelController@store']);
+
 //plano Routes
 Route::group(['middleware'=> 'web'], function() {
     Route::resource('plano', '\App\Http\Controllers\PlanoController');
 });
-
-Route::get('import', ['as'=>'import', 'uses'=>'ExcelController@import']);
-Route::post('import', ['as'=>'import', 'uses'=>'ExcelController@store']);
 
 //aluno Routes
 Route::group(['middleware'=> 'web'], function() {
@@ -62,7 +62,7 @@ Route::group(['middleware'=> 'web'], function() {
 
 //chamada Routes
 Route::group(['middleware'=> 'web'], function() {
-    Route::get('plano/{plano}/aluno/{aluno}/chamada', '\App\Http\Controllers\AlunoController@chamada');
-    Route::get('plano/{plano}/aluno/{aluno}/registrar', '\App\Http\Controllers\AlunoController@registrar');
-    Route::get('plano/{plano}/aluno/{aluno}/desregistrar', '\App\Http\Controllers\AlunoController@desregistrar');
+    Route::get('plano/{plano}/aula/{aula}/aluno', ['as' => 'chamada.index', 'uses' => 'ChamadaController@index']);
+    Route::post('plano/{plano}/aula/{aula}/aluno/{aluno}/check', ['as' => 'chamada.check', 'uses' => 'ChamadaController@check']);
+    Route::post('plano/{plano}/aula/{aula}/aluno/{aluno}/uncheck', ['as' => 'chamada.uncheck', 'uses' => 'ChamadaController@uncheck']);
 });

@@ -140,47 +140,4 @@ class AlunoController extends Controller
 
         return redirect('plano/' . $plano_id . '/aluno')->with('success', 'Aluno removido com sucesso!');
     }
-
-    public function consulta($id)
-    {
-        $plano_id = $id;
-        $title = 'Lista de Alunos';
-        $alunos = Aluno::paginate(6);
-        return view('aluno.index',compact('alunos','title','plano_id'));
-    }
-
-    public function registrar($plano_id, $id)
-    {
-        $aluno = Aluno::findOrfail($id);
-        $plano = Plano::findOrfail($aluno->plano_id);
-
-        $aluno->faltas = $aluno->faltas + 1;
-        $aluno->save();
-
-        $plano_id = $plano->id;
-        $alunos = Aluno::all();
-
-        return view('aluno.chamada',compact('alunos','plano_id'));
-    }
-
-    public function desregistrar($plano_id, $id)
-    {
-        $aluno = Aluno::findOrfail($id);
-        if($aluno->faltas > 0){
-            $aluno->faltas = $aluno->faltas - 1;
-            $aluno->save();
-        }
-        $plano_id = $aluno->plano_id;
-        $alunos = Aluno::all();
-
-        return view('aluno.chamada',compact('alunos','plano_id'));
-    }
-
-    public function chamada($id)
-    {
-        $plano_id = $id;
-        $alunos = Aluno::all();
-
-        return view('aluno.chamada',compact('alunos', 'plano_id'));
-    }
 }

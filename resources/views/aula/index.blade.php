@@ -32,7 +32,7 @@
                                 <th>Data</th>
                                 <th>Tema</th>
                                 <th>Descrição</th>
-                                <th style="width: 175px !important;">Ações</th>
+                                <th style="width: 200px !important;">Ações</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -42,28 +42,36 @@
                                     <td>{{ $aula->tema }}</td>
                                     <td>{{ $aula->descricao }}</td>
                                     <td>
-                                        <a href="{{ url('/plano/' . $plano->id . '/aula/' . $aula->id) }}" title="Visualizar">
-                                            <button class="btn btn-info btn-sm"><i class="fa fa-eye" aria-hidden="true"></i></button>
-                                        </a>
-
-                                        <a href="{{ url('/plano/' . $plano->id . '/aula/' . $aula->id . '/edit') }}" title="Editar">
-                                            <button class="btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                                        </a>
-
-                                        <form method="POST" action="{{ url('/plano/' . $plano->id . '/aula/' . $aula->id) }}" accept-charset="UTF-8" style="display:inline">
-                                            {{ method_field('DELETE') }}
-                                            {{ csrf_field() }}
-                                            <button type="submit" class="btn btn-danger btn-sm" title="Excluir" onclick="return confirm(&quot;Confirma exclusão?&quot;)"><i class="fa fa-trash-o" aria-hidden="true"></i> </button>
+                                        <form method="GET" action="{{ url('/plano/' . $plano->id . '/aula/' . $aula->id) }}" style="display:inline">
+                                            <button class="btn btn-info btn-sm" title="Visualizar">
+                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                            </button>
                                         </form>
 
-                                        <a href="{{ url('/plano/' . $plano->id . '/aula/' . $aula->id . '/frequencia') }}" title="Listar Frequências">
-                                            <button class="btn btn-success btn-sm"><i class="fa fa-calendar-check-o" aria-hidden="true"></i></button>
-                                        </a>
+                                        <form method="GET" action="{{ url('/plano/' . $plano->id . '/aula/' . $aula->id . '/edit') }}" style="display:inline">
+                                            <button class="btn btn-primary btn-sm" title="Editar">
+                                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                            </button>
+                                        </form>
 
-                                        <br />
-                                        <br />
-                                        <form method="get" action = '/plano/{!! $plano->id !!}/aluno/{!! $aula->id !!}/chamada'>
-                                            <button class="btn btn-success btn-sm"><i class="fa fa-calendar-check-o" aria-hidden="true"></i> Fazer Chamada</button>
+                                        <form method="POST" action="{{ url('/plano/' . $plano->id . '/aula/' . $aula->id) }}" style="display:inline">
+                                            {{ method_field('DELETE') }}
+                                            {{ csrf_field() }}
+                                            <button type="submit" class="btn btn-danger btn-sm" title="Excluir" onclick="return confirm(&quot;Confirma exclusão?&quot;)">
+                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                            </button>
+                                        </form>
+
+                                        <form method="GET" action="{{ url('/plano/' . $plano->id . '/aula/' . $aula->id . '/frequencia') }}" style="display:inline">
+                                            <button class="btn btn-success btn-sm" title="Listar Frequências">
+                                                <i class="fa fa-list" aria-hidden="true"></i>
+                                            </button>
+                                        </form>
+
+                                        <form method="GET" action="{{ url('/plano/' . $plano->id . '/aula/' . $aula->id . '/chamada') }}" style="display:inline">
+                                            <button class="btn btn-success btn-sm" title="Realizar Chamada">
+                                                <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+                                            </button>
                                         </form>
                                     </td>
                                 </tr>
