@@ -1,0 +1,73 @@
+1. Clonar o projeto:
+$ git clone https://github.com/rafaeldourado50/scf-ufba.git
+
+2. Acessar a pasta do projeto:
+$ cd scf-ufba
+
+3. Baixar as dependências:
+$ composer update
+
+5. Criar o arquivo de configuração:
+$ copy .env.example .env
+
+6. Acessar o MySql para criar a base de dados:
+$ mysql -u [usuário] -p
+Obs: Irá pedir a senha do usuário mysql.
+
+7. Criar uma nova base de dados:
+> CREATE DATABASE homestead;
+Obs: O nome da base de dados pode ser qualquer um.
+
+8. Sair da interface MySql:
+>exit
+
+9. Gerar a chave da aplicação:
+$ php artisan key:generate
+
+10. Configurar o arquivo ".env" criado o nome da base de dados,
+usuário administrador e senha do banco de dados:
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=homestead
+DB_USERNAME=root
+DB_PASSWORD=p@$$w0rd
+
+11. Criar as tabelas na base de dados:
+$ php artisan migrate
+Obs: Retornará o seguinte erro:
+Migration table created successfully.
+
+In Connection.php line 664:
+
+  SQLSTATE[42S02]: Base table or view not found: 1146 Table 'homestead.chamadas' doesn't exist (SQL: alter table `cha
+  madas` add constraint `chamadas_aluno_id_foreign` foreign key (`aluno_id`) references `alunos` (`id`) on delete CAS
+  CADE on update RESTRICT)
+
+
+In PDOStatement.php line 107:
+
+  SQLSTATE[42S02]: Base table or view not found: 1146 Table 'homestead.chamadas' doesn't exist
+
+
+In PDOStatement.php line 105:
+
+  SQLSTATE[42S02]: Base table or view not found: 1146 Table 'homestead.chamadas' doesn't exist
+
+O erro se dá em razão de não ter sido criado as seeds no banco de dados,
+o que iremos fazer a seguir.
+
+12. Criar as seeds no bando de dados:
+$ php artisan db:seed
+
+13. Rodar o servidor no laravel para teste:
+$ php artisan serve
+Obs: Será possível acessar o sistema pelo browser através do endereço:
+http://localhost:8000/
+
+O sistema iniciará na tela de boas vindas, com opção de logar-se ou registrar um usuário.
+Ao logar haverá a opção de abrir os planos de ensino (criados pelo usuário logado) ou
+importar dados através de planilha do Microsoft Excel.
+Para importação, por questão de limitação da biblioteca utilizada, é necessário que a planilha
+tenha um formato padrão conforme modelo contido no arquivo:
+.documents\samples\MATC82.xls
